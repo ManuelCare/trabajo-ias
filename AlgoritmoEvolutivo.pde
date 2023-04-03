@@ -7,7 +7,7 @@ int tamPoblacion = 100;
 int tamPoblacionAct = tamPoblacion;
 Particle[] poblacion = new Particle[tamPoblacionAct];
 //Dominio de la funcion
-float min = 3; //
+float min = -3; //
 float max = 7; //
 //seleccion
 int numSeleccionados = 20 , tamTorneo = 5;
@@ -15,7 +15,7 @@ Particle[] seleccionados = new Particle[numSeleccionados];
 Particle[] torneo = new Particle[tamTorneo];
 //cruzamiento
 //mutacion
-float variacion = 1.0f;
+float variacion = 0.6;
 
 class Particle {
   float x, y, fit; // current position(x-vector)  and fitness (x-fitness)
@@ -32,12 +32,12 @@ class Particle {
   }
   float Eval() {
     evals++;
-    fit = 10*2 + pow(x, 2) - 10*cos(2*PI*x) + pow(y, 2) - 10*cos(2*PI*y);
+    fit = 20+pow(x, 2) - 10*cos(2*PI*x) + pow(y, 2) - 10*cos(2*PI*y);
     return fit;
   }
    void display(){
-    int ejeX = int( (max+x)/(2*max) * width );
-    int ejeY = int( abs(y-min)/(2*max) * height );
+    int ejeX = int( (max+x)/( abs(min) + max) * 1024 );
+    int ejeY = int( abs(y-min)/( abs(min) + max) * 1024 );
     
     color c=surf.get(ejeX, ejeY);
     fill(c);
@@ -53,13 +53,14 @@ void seleccionTorneo() {
     for (i=0; i<numSeleccionados; i++){
       for(j=0; j<tamTorneo; j++)
         torneo[j] = poblacion[int(random(tamPoblacionAct))];
+        
       ganador = torneo[0];
-      
       for(j=0; j<tamTorneo; j++){
         if(torneo[j].fit<ganador.fit) ganador = torneo[j];}
       seleccionados[i] = ganador;
     }
 }
+
 void cruzamiento(){
   tamPoblacionAct =  int(random(tamPoblacion/2, tamPoblacion));
   int i;
@@ -77,14 +78,14 @@ void mutacion(){
   int i;
   for(i=0; i<tamPoblacionAct; i++){
     poblacion[i].x = poblacion[i].x + random(-variacion, variacion);
-    poblacion[i].x = poblacion[i].y + random(-variacion, variacion);
+    poblacion[i].y = poblacion[i].y + random(-variacion, variacion);
   }
 }
 
 void setup() {
     print("init setup\n");
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    size(426, 426); //setea width y height (de acuerdo al tamaño de la imagen)
+    size(1024, 1024); //setea width y height (de acuerdo al tamaño de la imagen)
     surf = loadImage("rastrigin.jpg");
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,26 +93,24 @@ void setup() {
     // crea arreglo de objetos partículas
     poblacion = new Particle[tamPoblacionAct];
     
-    for (int i = 1; i < tamPoblacionAct; i++)
+    for (int i = 0; i < tamPoblacionAct; i++)
       poblacion[i] = new Particle();
 }
 
 void draw() {
-    print("init draw\n");
     //despliega mapa, posiciones  y otros
     image(surf, 0, 0);
-    print("init poblacion\n");
-     print(tamPoblacionAct);
-     print("\n");
-    for (int i = 1; i < tamPoblacionAct; i++){
+    int z = 0;
+    for (int i = 0; i < tamPoblacionAct; i++){
       poblacion[i].Eval();
       poblacion[i].display();
+      if(poblacion[i].fit>poblacion[z].fit) z = i;
     }
-    print("init torneo\n");
+    print(" el mejor tiene un fit de : " + poblacion[z].fit + "\n");
+    delay(500);
     seleccionTorneo();
-    print("init cruza\n");
     cruzamiento();
-    print("init muta\n");
     mutacion();
-    delay(10);
+    
+    
 }
