@@ -144,7 +144,7 @@ void mutacion(){
 
 
 void setup() {
-    randomSeed(10);
+    randomSeed(255);
     print("init setup\n");
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     size(1024, 1024); //setea width y height (de acuerdo al tamaño de la imagen)
