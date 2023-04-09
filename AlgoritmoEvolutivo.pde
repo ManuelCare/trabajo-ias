@@ -129,6 +129,7 @@ void cruzamientoPorFit(){
       if(seleccionados[i].fit<partner.fit) razon = (1-(seleccionados[i].fit/partner.fit))*razon_skew;
       else razon = (seleccionados[i].fit/partner.fit)*razon_skew;
       poblacion[tamPoblacionAct+j] = new Particle(razon*seleccionados[i].x+(1-razon)*partner.x,razon*seleccionados[i].y+(1-razon)*partner.y);
+      poblacion[tamPoblacionAct+j].Eval();
     }
     tamPoblacionAct +=nHijos;
   }
@@ -188,15 +189,16 @@ void draw() {
       bestofalltimes_y = poblacion[z].y;
     }
     promedio = 0;
-    for(int i = 0; i<5; i++){
-      promedio = promedio + poblacion[i].fit;
+    for(int i = 0; i<tamPoblacionAct; i++){
+      if(poblacion[i].fit<200)
+        promedio = promedio + poblacion[i].fit;
     }
     promedio = promedio/tamPoblacionAct;
   
   //Escribe en cada iteracion
     TXTprom.println(promedio);
-    TXTmin.println(str(poblacion[z].fit));
-  if(iterations > 2500){
+    TXTmin.println(str(bestofalltimes_value));
+  if(iterations > 1000){
     //Termina con los textos
     TXTprom.flush(); // Writes the remaining data to the file
     TXTprom.close(); // Finishes the file
