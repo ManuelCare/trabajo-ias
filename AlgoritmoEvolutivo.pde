@@ -144,7 +144,7 @@ void mutacion(){
 
 
 void setup() {
-    randomSeed(255);
+    randomSeed(225);
     print("init setup\n");
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     size(1024, 1024); //setea width y height (de acuerdo al tamaño de la imagen)
@@ -173,11 +173,6 @@ void pintarOptimo(){
 }
 
 void draw() {
-    if(iterations%100 == 0){
-      //increment = -2*increment;
-    }
-    fx = 2*cos(value);
-    fy = 2*sin(value);
     //value = value + increment;
     //despliega mapa, posiciones  y otros
     image(surf, 0, 0);
@@ -209,7 +204,6 @@ void draw() {
     TXTmin.close(); // Finishes the file
     exit();   //Termina a la iteración indicada
   }
-    pintarOptimo();
     textFont(f,16);                  // STEP 3 Specify font to be used
     fill(0);                         // STEP 4 Specify font color
     display_text = "Iteraciones: " + iterations+"\n";
